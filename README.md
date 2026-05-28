@@ -1,5 +1,4 @@
-# OWASP Top 10 (2025) — Detailed Notes
-
+# OWASP Top 10 (2025) 
 ## Introduction
 
 The OWASP Top 10 is a globally recognized security awareness document published by OWASP (Open Worldwide Application Security Project). It lists the most critical web application security risks based on real-world attack data, security research, and industry experience.
