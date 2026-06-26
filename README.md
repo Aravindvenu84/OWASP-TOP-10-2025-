@@ -1,44 +1,4 @@
-# OWASP Top 10 (2025) — Detailed Security Report
-
----
-
-# Table of Contents
-
-1. Introduction
-2. A01: Broken Access Control
-3. A02: Cryptographic Failures
-4. A03: Injection
-5. A04: Insecure Design
-6. A05: Security Misconfiguration
-7. A06: Vulnerable and Outdated Components
-8. A07: Identification and Authentication Failures
-9. A08: Software and Data Integrity Failures
-10. A09: Security Logging and Monitoring Failures
-11. A10: Server-Side Request Forgery (SSRF)
-12. Conclusion
-13. References
-
----
-
-# Introduction
-
-The OWASP Top 10 is a globally recognized security awareness document published by OWASP (Open Worldwide Application Security Project). It identifies the most critical web application security risks based on industry data, real-world attacks, and security research.
-
-The OWASP Top 10 helps:
-- Developers build secure applications
-- Security teams identify vulnerabilities
-- Organizations improve cybersecurity practices
-- Students understand modern web security risks
-
-Modern applications face increasing threats because of:
-- Cloud computing
-- APIs
-- Microservices
-- Containers
-- CI/CD pipelines
-- Supply chain attacks
-
-Understanding these risks is essential for secure software development.
+# OWASP Top 10: 2025
 
 ---
 
@@ -46,607 +6,545 @@ Understanding these risks is essential for secure software development.
 
 ## Description
 
-Broken Access Control occurs when users can access resources or perform actions beyond their intended permissions.
+Broken Access Control occurs when an application fails to properly enforce restrictions on what authenticated or unauthenticated users are allowed to access or perform.
 
-Access control mechanisms are responsible for:
-- Restricting unauthorized access
-- Protecting sensitive data
-- Enforcing user roles and permissions
+This includes:
 
-When access controls fail, attackers can bypass restrictions.
-
----
+* Vertical privilege escalation
+* Horizontal privilege escalation
+* Insecure Direct Object References (IDOR)
+* Forced browsing
+* Privilege abuse
+* Access control bypass
 
 ## Common Causes
 
-- Missing authorization checks
-- Predictable URLs or IDs
-- Improper role validation
-- Misconfigured APIs
-- Forced browsing
-- Insecure Direct Object References (IDOR)
+* Missing authorization checks
+* Insecure API endpoints
+* Predictable object identifiers
+* Improper role validation
+* Client-side access control
+* Default administrative accounts
+
+## Real-World Impact
+
+Attackers may gain access to:
+
+* Other users' accounts
+* Sensitive files
+* Administrative functions
+* Financial records
+* Customer information
+* Internal application resources
+
+## Example
+
+A normal user changes:
+
+```
+/user/profile?id=1001
+```
+
+to
+
+```
+/user/profile?id=1002
+```
+
+and successfully views another user's information.
+
+## Case Study
+
+Numerous applications have suffered **IDOR** vulnerabilities where attackers accessed confidential user data simply by modifying object identifiers in URLs without proper authorization checks.
+
+## Prevention and Mitigation
+
+* Enforce server-side authorization
+* Implement Role-Based Access Control (RBAC)
+* Deny access by default
+* Validate every request
+* Use indirect object references
+* Log unauthorized access attempts
+* Perform regular access control testing
 
 ---
+
+# A02: Security Misconfiguration
+
+## Description
+
+Security Misconfiguration occurs when security settings are improperly configured, left at default values, or unnecessary services and features remain enabled.
+
+This includes:
+
+* Default credentials
+* Debug mode enabled
+* Directory listing
+* Excessive error messages
+* Open cloud storage
+* Unnecessary services
+
+## Common Causes
+
+* Default configurations
+* Missing security hardening
+* Improper permissions
+* Misconfigured HTTP headers
+* Outdated server configurations
+* Forgotten development settings
+
+## Real-World Impact
+
+Attackers may obtain:
+
+* Server information
+* Configuration files
+* Database credentials
+* Internal paths
+* Administrative access
+* Sensitive application data
+
+## Example
+
+A production web server displays detailed stack traces whenever an application error occurs.
+
+## Case Study
+
+Numerous cloud storage buckets were left publicly accessible, exposing millions of sensitive customer records due to incorrect permission settings.
+
+## Prevention and Mitigation
+
+* Remove default accounts
+* Disable unnecessary services
+* Hide detailed error messages
+* Configure secure HTTP headers
+* Apply security hardening guides
+* Regularly review configurations
+* Automate configuration management
+
+---
+
+# A03: Software Supply Chain Failures
+
+## Description
+
+Software Supply Chain Failures occur when attackers compromise software through third-party libraries, dependencies, package managers, CI/CD pipelines, or build systems.
+
+This includes:
+
+* Vulnerable dependencies
+* Malicious packages
+* Compromised CI/CD pipelines
+* Dependency confusion
+* Typosquatting
+* Build server compromise
+
+## Common Causes
+
+* Outdated dependencies
+* Blind trust in third-party packages
+* No integrity verification
+* Insecure CI/CD pipelines
+* Missing dependency scanning
+* Poor package management
 
 ## Real-World Impact
 
 Attackers may:
-- Access other users’ accounts
-- View confidential information
-- Modify or delete data
-- Gain administrator privileges
-- Perform unauthorized actions
 
----
+* Execute malicious code
+* Compromise software updates
+* Steal sensitive data
+* Infect customer systems
+* Gain persistent access
 
 ## Example
 
-A user changes:
-
-```bash
-/user/profile/101
-```
-
-to:
-
-```bash
-/user/profile/102
-```
-
-and gains access to another user's profile.
-
----
+A developer accidentally installs a malicious package from a public repository that has the same name as an internal package.
 
 ## Case Study
 
-Several social media and banking applications have suffered IDOR vulnerabilities where attackers accessed customer information simply by modifying URL parameters.
-
----
+The **SolarWinds** supply chain attack compromised software updates, affecting thousands of organizations worldwide.
 
 ## Prevention and Mitigation
 
-- Implement Role-Based Access Control (RBAC)
-- Enforce authorization checks server-side
-- Deny access by default
-- Use secure session management
-- Validate permissions for every request
-- Avoid exposing internal object identifiers directly
-- Regularly test access controls
+* Scan dependencies regularly
+* Verify package integrity
+* Use trusted repositories
+* Secure CI/CD pipelines
+* Implement Software Bill of Materials (SBOM)
+* Monitor third-party components
+* Digitally sign software releases
 
 ---
 
-# A02: Cryptographic Failures
+# A04: Cryptographic Failures
 
 ## Description
 
 Cryptographic Failures occur when sensitive information is not properly protected using encryption.
 
 This includes:
-- Weak encryption algorithms
-- Improper password storage
-- Insecure data transmission
-- Poor key management
 
----
+* Weak encryption algorithms
+* Improper password storage
+* Insecure data transmission
+* Poor key management
+* Missing encryption
 
 ## Common Causes
 
-- Using outdated encryption methods
-- Storing passwords in plaintext
-- Weak SSL/TLS configurations
-- Exposed encryption keys
-- Missing HTTPS
-
----
+* Weak cryptographic algorithms
+* Plaintext password storage
+* Weak TLS configuration
+* Hardcoded encryption keys
+* Missing HTTPS
 
 ## Real-World Impact
 
 Attackers may steal:
-- Passwords
-- Credit card details
-- Personal information
-- Medical records
-- Financial data
 
----
+* Passwords
+* Credit card details
+* Personal information
+* Medical records
+* Financial data
 
 ## Example
 
 A website sends login credentials over HTTP instead of HTTPS.
 
----
-
 ## Case Study
 
-Large breaches exposed millions of user passwords because applications stored passwords using weak hashing algorithms such as MD5 and SHA1.
-
----
+Large breaches exposed millions of user passwords because applications stored passwords using weak hashing algorithms such as MD5 and SHA-1.
 
 ## Prevention and Mitigation
 
-- Use HTTPS everywhere
-- Use strong encryption standards
-- Store passwords using bcrypt or Argon2
-- Secure encryption keys properly
-- Disable outdated SSL/TLS versions
-- Encrypt sensitive stored data
-- Use trusted cryptographic libraries
+* Use HTTPS everywhere
+* Use TLS 1.2/1.3
+* Store passwords using Argon2 or bcrypt
+* Secure encryption keys
+* Encrypt sensitive stored data
+* Disable outdated SSL/TLS versions
+* Use trusted cryptographic libraries
 
 ---
 
-# A03: Injection
+# A05: Injection
 
 ## Description
 
-Injection vulnerabilities occur when untrusted user input is interpreted as commands or queries.
+Injection vulnerabilities occur when untrusted input is interpreted as commands or queries by an interpreter.
 
-Common injection attacks include:
-- SQL Injection
-- NoSQL Injection
-- Command Injection
-- LDAP Injection
+This includes:
 
----
+* SQL Injection
+* Command Injection
+* NoSQL Injection
+* LDAP Injection
+* XPath Injection
+* Template Injection
 
 ## Common Causes
 
-- Unsanitized user input
-- Dynamic query construction
-- Lack of parameterized queries
-- Weak input validation
-
----
+* Unsanitized input
+* Dynamic query construction
+* Missing parameterized queries
+* Poor input validation
+* Unsafe system command execution
 
 ## Real-World Impact
 
-Attackers can:
-- Read databases
-- Delete records
-- Execute operating system commands
-- Bypass authentication
-- Compromise servers
+Attackers may:
 
----
+* Read databases
+* Modify records
+* Delete data
+* Execute operating system commands
+* Gain server access
 
 ## Example
 
-SQL Injection:
-
-```sql
-SELECT * FROM users WHERE username = 'admin' OR '1'='1';
+```
+' OR '1'='1
 ```
 
----
+bypasses authentication in a vulnerable SQL query.
 
 ## Case Study
 
-The Equifax breach involved attackers exploiting a web application vulnerability that led to massive exposure of sensitive customer data.
-
----
+Many major breaches resulted from SQL Injection vulnerabilities exposing millions of customer records.
 
 ## Prevention and Mitigation
 
-- Use prepared statements and parameterized queries
-- Validate and sanitize all user input
-- Use ORM frameworks securely
-- Apply least privilege to databases
-- Escape special characters properly
-- Implement Web Application Firewalls (WAF)
+* Use parameterized queries
+* Validate input
+* Escape user input where necessary
+* Avoid dynamic SQL
+* Apply least privilege
+* Use ORM frameworks
+* Perform security testing
 
 ---
 
-# A04: Insecure Design
+# A06: Insecure Design
 
 ## Description
 
-Insecure Design refers to security weaknesses caused by poor application architecture or missing security controls during development.
+Insecure Design represents security weaknesses introduced during the application's design phase rather than implementation.
 
-This is a design-level problem rather than a coding bug.
+This includes:
 
----
-
-## Common Causes
-
-- Lack of threat modeling
-- Missing security requirements
-- Poor authentication workflows
-- No rate limiting
-- Insecure business logic
-
----
-
-## Real-World Impact
-
-Applications become vulnerable even if the code itself is technically correct.
-
-Attackers may exploit:
-- Weak workflows
-- Missing protections
-- Business logic flaws
-
----
-
-## Example
-
-A banking application allows unlimited password reset attempts without account lockout.
-
----
-
-## Case Study
-
-Financial applications have suffered abuse due to poor business logic design, allowing attackers to bypass verification systems.
-
----
-
-## Prevention and Mitigation
-
-- Follow Secure Software Development Lifecycle (SSDLC)
-- Perform threat modeling
-- Design security controls early
-- Implement rate limiting
-- Conduct architecture reviews
-- Use secure design patterns
-- Perform security testing throughout development
-
----
-
-# A05: Security Misconfiguration
-
-## Description
-
-Security Misconfiguration occurs when systems, applications, cloud services, or servers are configured insecurely.
-
----
+* Missing security controls
+* Poor threat modeling
+* Insecure workflows
+* Lack of business logic validation
+* Missing rate limiting
 
 ## Common Causes
 
-- Default credentials
-- Open cloud storage buckets
-- Unnecessary services enabled
-- Debug mode enabled in production
-- Improper permissions
-
----
+* No secure SDLC
+* Missing threat modeling
+* Weak architecture
+* Business logic flaws
+* Lack of security requirements
 
 ## Real-World Impact
 
 Attackers may:
-- Gain unauthorized access
-- Discover sensitive information
-- Exploit exposed services
-- Collect system details
 
----
+* Abuse business logic
+* Bypass workflows
+* Commit fraud
+* Escalate privileges
+* Cause financial loss
 
 ## Example
 
-An admin dashboard is publicly accessible using:
-
-```text
-admin/admin
-```
-
----
+A banking application allows unlimited money transfer attempts without fraud detection.
 
 ## Case Study
 
-Many cloud storage data leaks occurred because storage buckets were left publicly accessible without proper permissions.
-
----
+Many financial fraud incidents occurred because applications lacked proper abuse prevention despite having technically secure code.
 
 ## Prevention and Mitigation
 
-- Remove default credentials
-- Disable unnecessary services
-- Use hardened configurations
-- Separate development and production environments
-- Continuously audit configurations
-- Apply security headers
-- Automate configuration management
+* Adopt Secure SDLC
+* Perform threat modeling
+* Apply secure design principles
+* Validate business logic
+* Implement abuse prevention
+* Conduct security architecture reviews
 
 ---
 
-# A06: Vulnerable and Outdated Components
+# A07: Authentication Failures
 
 ## Description
 
-Applications depend heavily on third-party libraries, frameworks, and software packages. Vulnerabilities in these components can compromise the entire application.
+Authentication Failures occur when authentication mechanisms are improperly implemented.
 
----
+This includes:
+
+* Weak passwords
+* Session fixation
+* Credential stuffing
+* Weak MFA
+* Session hijacking
 
 ## Common Causes
 
-- Outdated software dependencies
-- Unsupported framework versions
-- Missing security patches
-- Unknown software inventory
-
----
+* Weak password policies
+* Predictable session IDs
+* Missing MFA
+* Poor session management
+* Unlimited login attempts
 
 ## Real-World Impact
 
 Attackers may:
-- Execute remote code
-- Take control of servers
-- Steal sensitive data
-- Crash systems
 
----
+* Hijack accounts
+* Access sensitive information
+* Perform unauthorized actions
+* Impersonate users
 
 ## Example
 
-Using a vulnerable version of Apache Log4j affected by Log4Shell.
-
----
+An application allows unlimited password attempts without account lockout.
 
 ## Case Study
 
-The Log4Shell vulnerability affected organizations worldwide, allowing remote code execution on vulnerable systems.
-
----
+Credential stuffing attacks have compromised millions of user accounts using previously leaked passwords.
 
 ## Prevention and Mitigation
 
-- Regularly update dependencies
-- Remove unused libraries
-- Use automated vulnerability scanners
-- Monitor security advisories
-- Maintain software inventory
-- Apply patches quickly
-- Use trusted package sources
+* Require MFA
+* Enforce strong passwords
+* Rate-limit login attempts
+* Secure session management
+* Rotate session identifiers
+* Detect credential stuffing
 
 ---
 
-# A07: Identification and Authentication Failures
+# A08: Software or Data Integrity Failures
 
 ## Description
 
-This category involves weak authentication and session management mechanisms.
+Software or Data Integrity Failures occur when software or critical data cannot be trusted due to missing integrity verification.
 
-Authentication systems verify user identity and protect accounts from unauthorized access.
+This includes:
 
----
+* Insecure deserialization
+* Unsigned updates
+* Tampered data
+* Missing integrity validation
+* CI/CD manipulation
 
 ## Common Causes
 
-- Weak passwords
-- Missing Multi-Factor Authentication (MFA)
-- Insecure session handling
-- Weak password reset systems
-- Poor credential management
-
----
+* Unsigned software
+* Missing integrity checks
+* Insecure deserialization
+* Weak update mechanisms
+* Insecure deployment
 
 ## Real-World Impact
 
 Attackers may:
-- Hijack accounts
-- Perform credential stuffing
-- Bypass login systems
-- Steal active sessions
 
----
+* Execute malicious code
+* Modify application behavior
+* Deploy malware
+* Compromise production systems
 
 ## Example
 
-Weak passwords:
-
-```text
-123456
-password
-admin
-```
-
----
+A software updater installs packages without verifying digital signatures.
 
 ## Case Study
 
-Many breaches occurred because attackers reused leaked passwords from previous breaches against other websites.
-
----
+Several malware campaigns distributed malicious software updates due to missing signature verification.
 
 ## Prevention and Mitigation
 
-- Enforce strong password policies
-- Enable Multi-Factor Authentication (MFA)
-- Use secure session management
-- Limit failed login attempts
-- Secure password reset workflows
-- Store passwords using strong hashing algorithms
+* Verify digital signatures
+* Validate update integrity
+* Secure deployment pipelines
+* Avoid insecure deserialization
+* Monitor software integrity
+* Secure CI/CD systems
 
 ---
 
-# A08: Software and Data Integrity Failures
+# A09: Security Logging and Alerting Failures
 
 ## Description
 
-Software and Data Integrity Failures occur when applications trust software updates, plugins, libraries, or CI/CD pipelines without proper verification.
+Security Logging and Alerting Failures occur when security events are not properly logged, monitored, or acted upon.
 
----
+This includes:
+
+* Missing audit logs
+* Poor monitoring
+* Missing alerts
+* Log tampering
+* Insufficient incident detection
 
 ## Common Causes
 
-- Insecure software updates
-- Compromised CI/CD pipelines
-- Unsigned software packages
-- Untrusted dependencies
-
----
+* Logging disabled
+* Short log retention
+* Missing alert rules
+* Poor monitoring
+* Unprotected logs
 
 ## Real-World Impact
 
 Attackers may:
-- Inject malicious code
-- Distribute malware
-- Compromise software supply chains
-- Control application infrastructure
 
----
-
-## Example
-
-Installing a modified package from an untrusted source.
-
----
-
-## Case Study
-
-The SolarWinds supply chain attack demonstrated how attackers compromised software updates to infiltrate organizations worldwide.
-
----
-
-## Prevention and Mitigation
-
-- Verify digital signatures
-- Secure CI/CD pipelines
-- Use trusted repositories
-- Monitor software integrity
-- Implement dependency verification
-- Restrict build system access
-- Perform integrity checks regularly
-
----
-
-# A09: Security Logging and Monitoring Failures
-
-## Description
-
-Applications that fail to properly log and monitor security events cannot detect or respond to attacks effectively.
-
----
-
-## Common Causes
-
-- Missing security logs
-- Poor monitoring systems
-- No alert mechanisms
-- Incomplete audit trails
-
----
-
-## Real-World Impact
-
-Attackers may remain undetected for long periods.
-
-Organizations may:
-- Fail incident response
-- Lose forensic evidence
-- Experience larger breaches
-- Miss active attacks
-
----
+* Remain undetected
+* Delete evidence
+* Persist in systems
+* Increase breach duration
 
 ## Example
 
-Repeated failed login attempts occur without generating alerts.
-
----
+Repeated failed login attempts are never logged or alerted.
 
 ## Case Study
 
-Several organizations discovered breaches months after attackers had already compromised systems because logging and monitoring were insufficient.
-
----
+Several major breaches remained undetected for months because organizations lacked effective monitoring and alerting.
 
 ## Prevention and Mitigation
 
-- Enable centralized logging
-- Monitor suspicious activity
-- Configure automated security alerts
-- Retain audit logs securely
-- Use SIEM solutions
-- Review logs regularly
-- Protect logs from tampering
+* Log all security events
+* Protect log integrity
+* Configure SIEM alerts
+* Monitor suspicious activity
+* Review logs regularly
+* Maintain incident response procedures
 
 ---
 
-# A10: Server-Side Request Forgery (SSRF)
+# A10: Mishandling of Exceptional Conditions
 
 ## Description
 
-SSRF occurs when attackers trick a server into making unauthorized requests to internal or external systems.
+Mishandling of Exceptional Conditions occurs when applications fail to safely handle unexpected situations, errors, resource exhaustion, or abnormal operating conditions.
 
-The vulnerable server acts as a proxy for the attacker.
+This includes:
 
----
+* Unhandled exceptions
+* Fail-open behavior
+* Resource exhaustion
+* Race conditions
+* Infinite loops
+* Poor error recovery
 
 ## Common Causes
 
-- User-controlled URLs
-- Improper URL validation
-- Open outbound network access
-- Weak internal network protections
-
----
+* Missing exception handling
+* Lack of input validation
+* No timeout mechanisms
+* Poor resource management
+* Unsafe default behavior
 
 ## Real-World Impact
 
 Attackers may:
-- Access internal systems
-- Scan private networks
-- Retrieve cloud metadata
-- Bypass firewalls
-- Access sensitive internal services
 
----
+* Crash applications
+* Cause denial of service
+* Bypass security controls
+* Corrupt data
+* Exhaust system resources
 
 ## Example
 
-A vulnerable application processes:
-
-```text
-http://localhost/admin
-```
-
-allowing attackers to access internal services.
-
----
+A malformed request causes an application to crash because the exception is never handled.
 
 ## Case Study
 
-Cloud SSRF attacks allowed attackers to retrieve cloud metadata credentials from internal cloud infrastructure services.
-
----
+Numerous denial-of-service vulnerabilities have resulted from applications exhausting memory or CPU resources due to improper exception handling.
 
 ## Prevention and Mitigation
 
-- Validate and sanitize URLs
-- Block internal IP ranges
-- Use allowlists for external requests
-- Restrict outbound traffic
-- Segment internal networks
-- Disable unnecessary URL fetching features
-- Monitor server-side requests
+* Handle exceptions securely
+* Fail securely (Fail Closed)
+* Implement resource limits
+* Use timeouts
+* Validate all inputs
+* Monitor application health
+* Test abnormal scenarios regularly
 
 ---
 
-# Conclusion
+## References
 
-The OWASP Top 10 represents the most important web application security risks developers and organizations must understand.
-
-Modern cybersecurity threats continue evolving because of:
-- Cloud computing
-- APIs
-- AI systems
-- Supply chain attacks
-- Microservices
-- Containerized environments
-
-Understanding these vulnerabilities helps organizations:
-- Build secure systems
-- Reduce attack surfaces
-- Protect sensitive information
-- Improve cybersecurity awareness
-- Strengthen incident response capabilities
-
-Security should be integrated into every stage of software development rather than treated as an afterthought.
-
----
-
-# References
-
-- https://owasp.org/www-project-top-ten/
-- https://owasp.org/
-- https://cheatsheetseries.owasp.org/
-- https://owasp.org/API-Security/
-- https://owasp.org/www-project-web-security-testing-guide/
+* OWASP Top 10: 2025
+* OWASP Web Security Testing Guide (WSTG)
+* OWASP Cheat Sheet Series
+* CWE Top 25
+* NIST Secure Software Development Framework (SSDF)
